@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Mart</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .navbar {
+            background-color: #e44d26;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .navbar img {
+            height: 40px;
+            width: auto;
+            margin-left: 20px;
+        }
+
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar li {
+            margin: 0 15px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+
+        .card-description {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .card-price {
+            font-weight: bold;
+            color: #e44d26;
+            margin-bottom: 10px;
+        }
+
+        .add-to-cart-btn {
+            background-color: #e44d26;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #c43e1c;
+        }
+
+        .cart-section {
+            margin:  Blitz 20px auto;
+            max-width: 1200px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-section h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #e44d26;
+        }
+
+        .cart-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cart-section li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            .navbar {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .navbar img {
+                margin: 0 0 10px 0;
+            }
+            .navbar li {
+                margin: 5px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGroB8d0A4la1WAr9f7wPWZA-c5nnCtG-YkQ&s" alt="Indian Mart Logo">
+        <ul>
+            <li><a href="home.html">Home</a></li>
+        
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">Cart (<span id="cart-count">0</span>)</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="grid" id="productGrid"></div>
+    </div>
+
+    <div class="cart-section">
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+        <p class="cart-total">Total: ₹<span id="cart-total">0</span></p>
+    </div>
+
+    <script>
+        const products = [
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfFUJIkm0EoTuifVnLMRKYuUDFBmrX9GU4qQ&s",
+                title: "Traditional Sari",
+                description: "Elegant silk sari with intricate designs.",
+                price: "₹2500"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMeULH2uykciPw4JxK8RtXILnJLWEMDn4ABw&s",
+                title: "Handcrafted Pottery",
+                description: "Beautifully designed clay pottery.",
+                price: "₹800"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFxaqvpPvRxdjqjm0YJH_AP71bZM7Y221PIA&s",
+                title: "Spices Box",
+                description: "Variety of authentic Indian spices.",
+                price: "₹1200"
+            },
+            {
+                image: "https://m.media-amazon.com/images/I/61SfHACb6xL.jpg",
+                title: "Wooden Toy",
+                description: "Handmade wooden toy for children.",
+                price: "₹500"
+            },
+            {
+                image: "https://theindiacrafthouse.com/cdn/shop/products/Channapatna_20Wooden_20Toy_20-_20Rural_20Couple_20_28Set_20of_202_29_20-_20HSN22_204@2x.jpg",
+                title: "Brass Lamp",
+                description: "Antique style brass oil lamp.",
+                price: "₹3000"
+            },
+            {
+                image: "https://assets.myntassets.com/w_412,q_60,dpr_2,fl_progressive/assets/images/14602274/2024/4/30/821d62bd-d097-4c3f-9278-09440fab5c8b1714451757601-Libas-Women-Blue-Ethnic-Motifs-Printed-Pure-Cotton-Kurta-wit-11.jpg",
+                title: "Cotton Kurta",
+                description: "Comfortable cotton kurta for men.",
+                price: "₹900"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlanBrD0QHCCKz7BupaUnEUJks-3hSoAHqVw&s",
+                title: "Incense Sticks",
+                description: "Aromatic incense sticks pack.",
+                price: "₹200"
+            },
+            {
+                image: "https://m.media-amazon.com/images/I/91rAV0EpSgS._AC_UY1100_.jpg",
+                title: "Silk Scarf",
+                description: "Luxurious silk scarf with patterns.",
+                price: "₹1800"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYfln32INZcpEtB7CsGLrcxUMQKx8mm1T2KQ&s",
+                title: "Tea Set",
+                description: "Traditional Indian tea set.",
+                price: "₹1500"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT3Cimwyhyce-EQaZKlloOdOV_60TQ8ZwsQw&s",
+                title: "Leather Journal",
+                description: "Handcrafted leather journal.",
+                price: "₹700"
+            },
+            {
+                image: "https://jewelryinformer.com/wp-content/uploads/2023/04/types-of-silver-jewelry-display-1024x576-1.jpg",
+                title: "Silver Jewelry",
+                description: "Elegant silver necklace set.",
+                price: "₹3500"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9n5Ote6JWSQ0MUhqr-wvDm4Ql2e00EvX3RA&s",
+                title: "Bamboo Basket",
+                description: "Eco-friendly bamboo basket.",
+                price: "₹600"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRZKkjPjiHJ19-uV5GgpdFoMQFY-eyfrEdQw&s",
+                title: "Handloom Shawl",
+                description: "Warm handloom shawl.",
+                price: "₹2000"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlwxOp3f9I7K0udnhDNQIq5dkP6aTKtm1cZQ&s",
+                title: "Copper Utensils",
+                description: "Traditional copper cooking utensils.",
+                price: "₹2800"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPtjZ7I7Go81LeQ6tuujgq5x_hofj_Vn_KpA&s",
+                title: "Stone Sculpture",
+                description: "Artistic stone sculpture.",
+                price: "₹4000"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAinh_bJr3zUJZRfG5TB2u1UGlJebfllkb8w&s",
+                title: "Jute Bag",
+                description: "Durable jute bag.",
+                price: "₹400"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQs9F49tylZN9LavBIQPeghdzY6RZnG2V-UJQ&s",
+                title: "Perfume Oils",
+                description: "Natural perfume oils set.",
+                price: "₹1000"
+            },
+            {
+                image: "https://cdn11.bigcommerce.com/s-x49po/images/stencil/1500x1500/products/123674/290863/handmade%2Fdownscaled%2F3e8CLoi2fHMgvBDB586z-20230725_172228_2000x2000__29764.1694251023.jpg?c=2&imbypass=on",
+                title: "Paintings",
+                description: "Indian style paintings.",
+                price: "₹1900"
+            },
+            {
+                image: "https://static.toiimg.com/thumb/resizemode-4,width-1280,height-720,msid-69385334/69385334.jpg",
+                title: "Herbal Teas",
+                description: "Variety of herbal teas.",
+                price: "₹300"
+            },
+            {
+                image: "https://www.purehomeandliving.com/cdn/shop/files/8907895129187_2.jpg?v=1707138066&width=600",
+                title: "Embroidered Cushion",
+                description: "Colorfulembroidered cushion.",
+                price: "₹850"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl6sDPBpkBDYvQpTJMKMNmc3Wa6I_x_GoCuw&s",
+                title: "Musical Instrument",
+                description: "Traditional musical Instrument.",
+                price: "₹5000"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT68LrQutgGWYxg0ck3lYqRhDfbVo0-47PTJw&s",
+                title: "Handmade Rug",
+                description: "Beautiful handmade rug.",
+                price: "₹2200"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSM3hpfNIMgZWwH7gJCe0_eJROQK698qRYbEQ&s",
+                title: "Natural Soaps",
+                description: "Set of natural soaps.",
+                price: "₹550"
+            },
+            {
+                image: "https://metalkart.in/cdn/shop/products/metallic-tree-embracing-moon-wall-hanging-48-x-28-inches-775208.jpg?v=1663832406",
+                title: "Wall Hanging",
+                description: "Decorative wall hanging.",
+                price: "₹1100"
+            },
+            {
+                image: "https://tesorworld.com/wp-content/uploads/2024/07/Brass-idols-1200x900.jpg",
+                title: "Brass Idols",
+                description: "Set of brass idols.",
+                price: "₹3200"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjS-lBmNnoR8oigqbIzwCJFdqdu4nxamEonQ&s",
+                title: "Cotton Bed Sheets",
+                description: "Soft cotton bed sheets.",
+                price: "₹1600"
+            },
+            {
+                image: "https://m.media-amazon.com/images/I/71TVZUHo+NL._AC_UF1000,1000_QL80_.jpg",
+                title: "Wooden Chess Set",
+                description: "Handcrafted wooden chess set.",
+                price: "₹950"
+            },
+            {
+                image: "https://tpkcashews.com/wp-content/uploads/2023/03/honey-yellow-beekeeper-1958464-e1678271626932.jpg",
+                title: "Natural Honey",
+                description: "Pure natural honey jar.",
+                price: "₹450"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmpYha2pA673Pr8xDyqMwHLVCF8l_YFwx3uA&s",
+                title: "Silk Cushion Covers",
+                description: "Luxurious silk cushion covers.",
+                price: "₹1700"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8wLk-xJf2pnwxvsSmhkRNWXWF4X1o93E4HA&s",
+                title: "Clay Water Pot",
+                description: "Traditional clay water pot.",
+                price: "₹750"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFoh_jW2uMkZl2asJypJWtYK9xpZO4ro6J1g&s",
+                title: "Handmade Paper",
+                description: "Set of handmade paper.",
+                price: "₹650"
+            },
+            {
+                image: "https://img1.wsimg.com/isteam/ip/267c2f74-af50-406d-bc69-2516f436f0ce/Nataraj-942bd34.jpg/:/cr=t:2.4%25,l:0%25,w:100%25,h:95.21%25/rs=w:600,h:800,cg:true",
+                title: "Bronze Statues",
+                description: "Elegant bronze statues.",
+                price: "₹3800"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNP0GqN0LI4dppc3it8nE2VYlKOwFD9Qqvww&s",
+                title: "Linen Shirts",
+                description: "Comfortable linen shirts.",
+                price: "₹1300"
+            },
+            {
+                image: "https://images-cdn.ubuy.co.in/651ed0f53589b97c83066726-hermolante-herb-grinder-spice-grinder.jpg",
+                title: "Spice Grinder",
+                description: "Traditional spice grinder.",
+                price: "₹800"
+            },
+            {
+                image: "https://images.meesho.com/images/products/234157050/qlivd_512.webp",
+                title: "Cotton Scarves",
+                description: "Soft cotton scarves.",
+                price: "₹550"
+            },
+            {
+                image: "https://www.ikea.com/in/en/images/products/brunbaer-plant-pot-with-saucer-outdoor-terracotta__1097588_pe865047_s5.jpg",
+                title: "Terracotta Pots",
+                description: "Handmade terracotta pots.",
+                price: "₹900"
+            },
+            {
+                image: "https://www.ritualistic.in/cdn/shop/files/incense-holders-konark-loban-lamp-ritualistic-konark-loban-lamp-loban-burner-loban-lamp-dhoop-dhuni-burner-incense-burner-for-home-and-office-6161139388859-28412636725346.jpg?v=1713696750",
+                title: "Incense Burner",
+                description: "Decorative incense burner.",
+                price: "₹400"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHicAXT6y2-6TqtNfIkYL0uO1EnNt-uixAmg&s",
+                title: "Handwoven Mats",
+                description: "Traditional handwoven mats.",
+                price: "₹1200"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2-8z893iOndAfy-_FY_tUOpCsvSqEkTquJg&s",
+                title: "Natural Oils",
+                description: "Set of natural oils.",
+                price: "₹700"
+            },
+            {
+                image: "https://woodentwist.com/cdn/shop/products/61.jpg?v=1618818981",
+                title: "Wooden Bowls",
+                description: "Handcrafted wooden bowls.",
+                price: "₹600"
+            }
+            // Add the rest of your products here (shortened for brevity)
+            // Add the rest of your unique products here (removed duplicates for brevity)
+        ];
+
+        const productGrid = document.getElementById("productGrid");
+
+        products.forEach(product => {
+            const card = document.createElement("div");
+            card.classList.add("card");
+
+            card.innerHTML = `
+                <img src="${product.image}" alt="${product.title}">
+                <div class="card-content">
+                    <h2 class="card-title">${product.title}</h2>
+                    <p class="card-description">${product.description}</p>
+                    <p class="card-price">${product.price}</p>
+                    <button class="add-to-cart-btn" data-title="${product.title}" data-price="${product.price}">Add to Cart</button>
+                </div>
+            `;
+
+            productGrid.appendChild(card);
+        });
+
+        // Cart functionality with localStorage
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let cartTotal = JSON.parse(localStorage.getItem("cartTotal")) || 0;
+
+        function addToCart(name, price) {
+            const numericPrice = parseInt(price.replace("₹", ""));
+            cart.push({ name, price: numericPrice });
+            cartTotal += numericPrice;
+            localStorage.setItem("cart", JSON.stringify(cart));
+            localStorage.setItem("cartTotal", JSON.stringify(cartTotal));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartItems = document.getElementById("cart-items");
+            const cartTotalElement = document.getElementById("cart-total");
+            const cartCount = document.getElementById("cart-count");
+
+            cartItems.innerHTML = "";
+            cart.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = `${item.name} - ₹${item.price}`;
+                cartItems.appendChild(li);
+            });
+
+            cartTotalElement.textContent = cartTotal;
+            cartCount.textContent = cart.length;
+        }
+
+        // Add event listeners to all "Add to Cart" buttons
+        document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const title = button.getAttribute("data-title");
+                const price = button.getAttribute("data-price");
+                addToCart(title, price);
+            });
+        });
+
+        // Initialize cart UI on page load
+        updateCartUI();
+    </script>
+</body>
+</html>
