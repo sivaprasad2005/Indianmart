@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Mart - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #e44d26;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .navbar img {
+            height: 40px;
+            width: auto;
+            margin-left: 20px;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar li {
+            margin: 0 15px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #ffd700;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop') no-repeat center/cover;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .hero-btn {
+            background-color: #e44d26;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .hero-btn:hover {
+            transform: scale(1.05);
+            background-color: #c43e1c;
+        }
+
+        /* Featured Products */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: #e44d26;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: cardFadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+
+        .card-description {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .card-price {
+            font-weight: bold;
+            color: #e44d26;
+            margin-bottom: 10px;
+        }
+
+        .add-to-cart-btn {
+            background-color: #e44d26;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #c43e1c;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .navbar img {
+                margin: 0 0 10px 0;
+            }
+            .navbar li {
+                margin: 5px 10px;
+            }
+            .hero {
+                height: 50vh;
+            }
+            .hero h1 {
+                font-size: 2em;
+            }
+            .hero p {
+                font-size: 1em;
+            }
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar a {
+                font-size: 1em;
+            }
+            .hero h1 {
+                font-size: 1.5em;
+            }
+            .section-title {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGroB8d0A4la1WAr9f7wPWZA-c5nnCtG-YkQ&s" alt="Indian Mart Logo">
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="#">Shop</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">Cart (<span id="cart-count">0</span>)</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to Indian Mart</h1>
+            <p>Discover the best of Indian craftsmanship and culture.</p>
+            <button class="hero-btn">Shop Now</button>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <div class="container">
+        <h2 class="section-title">Featured Products</h2>
+        <div class="grid" id="productGrid"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Indian Mart. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const products = [
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfFUJIkm0EoTuifVnLMRKYuUDFBmrX9GU4qQ&s",
+                title: "Traditional Sari",
+                description: "Elegant silk sari with intricate designs.",
+                price: "₹2500"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMeULH2uykciPw4JxK8RtXILnJLWEMDn4ABw&s",
+                title: "Handcrafted Pottery",
+                description: "Beautifully designed clay pottery.",
+                price: "₹800"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFxaqvpPvRxdjqjm0YJH_AP71bZM7Y221PIA&s",
+                title: "Spices Box",
+                description: "Variety of authentic Indian spices.",
+                price: "₹1200"
+            },
+            {
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWBEs6BovgSDf5yqgqUqr_3T6IT4hyEldmzA&s",
+                title: "Wooden Toy",
+                description: "Handmade wooden toy for children.",
+                price: "₹500"
+            }
+        ];
+
+        const productGrid = document.getElementById("productGrid");
+
+        products.forEach(product => {
+            const card = document.createElement("div");
+            card.classList.add("card");
+
+            card.innerHTML = `
+                <img src="${product.image}" alt="${product.title}">
+                <div class="card-content">
+                    <h2 class="card-title">${product.title}</h2>
+                    <p class="card-description">${product.description}</p>
+                    <p class="card-price">${product.price}</p>
+                    <button class="add-to-cart-btn" data-title="${product.title}" data-price="${product.price}">Add to Cart</button>
+                </div>
+            `;
+
+            productGrid.appendChild(card);
+        });
+
+        // Cart functionality
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let cartTotal = JSON.parse(localStorage.getItem("cartTotal")) || 0;
+
+        function addToCart(name, price) {
+            const numericPrice = parseInt(price.replace("₹", ""));
+            cart.push({ name, price: numericPrice });
+            cartTotal += numericPrice;
+            localStorage.setItem("cart", JSON.stringify(cart));
+            localStorage.setItem("cartTotal", JSON.stringify(cartTotal));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartCount = document.getElementById("cart-count");
+            cartCount.textContent = cart.length;
+        }
+
+        document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const title = button.getAttribute("data-title");
+                const price = button.getAttribute("data-price");
+                addToCart(title, price);
+            });
+        });
+
+        updateCartUI();
+    </script>
+</body>
+</html>
